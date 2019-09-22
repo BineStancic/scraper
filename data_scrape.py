@@ -5,6 +5,7 @@ import matplotlib.animation as animation
 from matplotlib import style
 import time
 
+
 time_start = time.time()
 
 headers = {
@@ -26,18 +27,52 @@ def find_exchange():
             BTX_price = paragraph.text
             y_1 = BTX_price.translate({ord('$'): None})
             y = y_1.translate({ord(','): None})
-            print(y)
+            #print(y)
             time_now = time.time()
             break
     return time_now,y
 
 
+open = []
+high = []
+low = []
+close = []
+date = []
+data = []
 
+#condition = True
 while True:
-    time_now,y = find_exchange()
-    x = time_now-time_start
-    file1 = open('data_exchange.txt', 'a')
-    file1.write(str(x)+ "," +str(y) +"\n")
-    file1.close()
-    print(x,y)
-    time.sleep(6)
+    for i in range(20):
+        time_now,y = find_exchange()
+        x = time_now-time_start
+        #date.append(x)
+        print(i)
+        data.append(y)
+        if i == 0:
+            date.append(x)
+            open.append(y)
+        if i == 19:
+            close.append(y)
+            min_value = min(data)
+            low.append(min_value)
+            max_value = max(data)
+            high.append(max_value)
+            print("Min" + str(low))
+            print("Max" + str(high))
+            print("Open" + str(open))
+            print("Close" + str(close))
+            print(data)
+            file1 = open('candle_data.txt', 'a')
+            file1.write(str(date)+ "," +str(open)+ "," +str(high)+ "," +str(low)+ "," +str(close)+"\n")
+            data *= 0
+
+            #condition = False
+        time.sleep(20)
+
+    #file1 = open('data_exchange.txt', 'a')
+    #file1.write(str(x)+ "," +str(y) +"\n")
+    #file1.close()
+    #print(x,y)
+    #time.sleep(10)
+
+print("break")
